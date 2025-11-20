@@ -2,7 +2,8 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- viewport-fit=cover handles the notch area on newer iPhones -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Porter Robertson | Web & AI Automation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -27,40 +28,47 @@
 
         body {
             background-color: var(--bg-color);
+            /* Gradient fallback if 3D fails */
+            background-image: radial-gradient(circle at 50% 50%, #111827 0%, #000000 100%);
             color: #ffffff;
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             margin: 0;
-            overscroll-behavior: none;
+            overscroll-behavior-y: none;
         }
 
         h1, h2, h3, .display-font {
             font-family: 'Space Grotesk', sans-serif;
         }
 
-        /* The 3D Canvas Background */
+        /* CANVAS CONTAINER */
         #canvas-container {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             z-index: -1;
             opacity: 0.6;
-            pointer-events: none; 
+            pointer-events: none !important; /* CRITICAL: Ensures clicks pass through */
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-color); }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        /* CUSTOM SCROLLBAR (Desktop Only) */
+        @media (min-width: 768px) {
+            ::-webkit-scrollbar { width: 8px; }
+            ::-webkit-scrollbar-track { background: var(--bg-color); }
+            ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+            ::-webkit-scrollbar-thumb:hover { background: #555; }
+        }
 
-        /* Utilities */
+        /* UTILITIES */
         .glass {
-            background: rgba(20, 20, 20, 0.85);
+            background: rgba(20, 20, 20, 0.95);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        @media (min-width: 768px) {
+            .glass { background: rgba(20, 20, 20, 0.8); }
         }
         
         .glass-card {
@@ -69,16 +77,18 @@
              border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* Automation Card Specifics */
+        /* AUTOMATION CARDS */
         .auto-card {
             position: relative;
             overflow: hidden;
-            transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
             width: 300px; 
             flex-shrink: 0; 
+            background: #111;
+            border: 1px solid #333;
         }
         @media (min-width: 768px) {
-            .auto-card { width: 350px; }
+            .auto-card { width: 350px; transition: transform 0.4s ease; }
+            .auto-card:hover { transform: translateY(-8px); border-color: #3b82f6; }
         }
         
         .auto-card::after {
@@ -111,7 +121,7 @@
             width: 100%;
             overflow: hidden;
             position: relative;
-            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
         }
 
         .marquee-track {
@@ -134,12 +144,12 @@
             100% { transform: translateX(-50%); }
         }
 
-        /* Browser Window */
+        /* BROWSER WINDOW (The Mockup) */
         .browser-window {
             background: #1e1e1e;
             border: 1px solid #333;
-            border-radius: 12px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.8);
             overflow: hidden;
             position: relative; 
             z-index: 10;
@@ -151,27 +161,24 @@
             gap: 6px;
             border-bottom: 1px solid #333;
         }
-        .dot { width: 8px; height: 8px; border-radius: 50%; }
-        .bg-red { background: #ef4444; }
-        .bg-yellow { background: #eab308; }
-        .bg-green { background: #22c55e; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; }
+        .bg-red { background: #ef4444; } .bg-yellow { background: #eab308; } .bg-green { background: #22c55e; }
         
-        /* Mockup Elements */
+        /* Mock Elements */
         .mock-nav { height: 30px; border-bottom: 1px solid #eee; opacity: 0; }
         .mock-hero { height: 150px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; opacity: 0; transform: scale(0.9); }
+        .mock-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; padding: 10px; }
+        .mock-card { height: 50px; background: #f3f4f6; border-radius: 4px; opacity: 0; transform: translateY(20px); }
         
-        .mock-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; padding: 15px; }
-        .mock-card { height: 60px; background: #f3f4f6; border-radius: 4px; opacity: 0; transform: translateY(20px); }
-        
-        /* NEW MOCK ELEMENTS */
+        /* Detailed Mock Elements */
         .mock-testimonials { display: flex; gap: 10px; padding: 15px; border-top: 1px solid #eee; opacity: 0; }
-        .mock-bubble { height: 40px; width: 100%; background: #f3f4f6; border-radius: 20px; }
-        .mock-footer { height: 40px; background: #2a2a2a; margin-top: auto; opacity: 0; }
+        .mock-bubble { height: 30px; width: 100%; background: #f3f4f6; border-radius: 15px; }
+        .mock-footer { height: 30px; background: #2a2a2a; margin-top: auto; opacity: 0; }
 
         #cursor { display: none; }
         @media (min-width: 768px) { #cursor { display: block; } }
 
-        /* --- PROJECT MODAL --- */
+        /* PROJECT MODAL */
         #project-modal {
             position: fixed;
             inset: 0;
@@ -183,152 +190,124 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-        
-        #project-modal.open {
-            pointer-events: auto;
-            opacity: 1;
-        }
-
-        .modal-backdrop {
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(5px);
-        }
-
+        #project-modal.open { pointer-events: auto; opacity: 1; }
+        .modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(5px); }
         .modal-content {
-            width: 95vw;
-            height: 90vh;
+            width: 100%; height: 100%;
             background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 12px;
-            position: relative;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            transform: scale(0.95);
-            transition: transform 0.3s ease;
+            display: flex; flex-direction: column;
+            position: relative; z-index: 10;
         }
-        
-        #project-modal.open .modal-content {
-            transform: scale(1);
+        @media (min-width: 768px) {
+            .modal-content { width: 90vw; height: 85vh; border-radius: 12px; border: 1px solid #333; }
         }
 
-        /* Contact Form Chips */
+        /* CONTACT CHIPS */
         .choice-chip {
             border: 1px solid #333;
             background: rgba(255,255,255,0.05);
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 0.8rem;
             border-radius: 9999px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.75rem; 
+            font-size: 0.75rem;
             color: #9ca3af;
             -webkit-tap-highlight-color: transparent;
         }
         @media (min-width: 768px) { .choice-chip { font-size: 0.875rem; } }
         
-        .choice-chip.selected {
-            background: #3b82f6;
-            border-color: #3b82f6;
-            color: white;
-        }
-        
-        /* Process Animation */
-        .process-step { opacity: 0.3; transition: all 0.5s; transform: translateX(-10px); }
+        .choice-chip.selected { background: #3b82f6; border-color: #3b82f6; color: white; }
+
+        /* PROCESS ANIMATION */
+        .process-step { opacity: 0.3; transition: all 0.5s; transform: translateX(-5px); }
         .process-step.active { opacity: 1; transform: translateX(0); }
-        .process-dot { transition: all 0.3s; box-shadow: 0 0 0 rgba(59, 130, 246, 0); }
-        .process-step.active .process-dot {
-            background-color: #3b82f6; border-color: #60a5fa; color: white;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.6); scale: 1.1;
-        }
-        
+        .process-dot { transition: all 0.3s; }
+        .process-step.active .process-dot { background-color: #3b82f6; border-color: #60a5fa; color: white; scale: 1.1; }
+
         .project-card-click-area {
             cursor: pointer;
             pointer-events: auto; 
         }
+        
+        input, textarea { font-size: 16px !important; }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- 3D Background Container -->
+    <!-- 3D Background -->
     <div id="canvas-container"></div>
 
-    <!-- PROJECT MODAL -->
+    <!-- MODAL -->
     <div id="project-modal">
         <div class="modal-backdrop" onclick="closeProject()"></div>
-        <div class="modal-content shadow-2xl">
-            <div class="h-12 bg-[#2a2a2a] border-b border-[#333] flex items-center justify-between px-4">
-                <div class="flex gap-2" onclick="closeProject()">
-                    <div class="dot bg-red" style="cursor:pointer;"></div>
-                    <div class="dot bg-yellow"></div>
-                    <div class="dot bg-green"></div>
-                </div>
-                <div class="hidden md:block text-xs text-gray-400 font-mono" id="modal-url-display">https://loading...</div>
-                <a id="modal-external-link" href="#" target="_blank" class="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1 px-3 py-2">
-                    Open in New Tab <i data-lucide="external-link" class="w-3 h-3"></i>
+        <div class="modal-content">
+            <div class="h-14 bg-[#111] border-b border-[#333] flex items-center justify-between px-4 shadow-md z-50">
+                <button onclick="closeProject()" class="text-white p-2">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+                <div class="text-xs text-gray-400 font-mono truncate max-w-[150px]" id="modal-url-display">loading...</div>
+                <a id="modal-external-link" href="#" target="_blank" class="bg-blue-600 text-white px-3 py-1.5 rounded text-xs font-bold">
+                    Open
                 </a>
             </div>
             <div class="flex-grow relative bg-white">
                 <div class="absolute inset-0 flex items-center justify-center text-gray-500 pointer-events-none">
-                    <span class="animate-pulse">Loading Site...</span>
+                    <span class="animate-pulse">Loading Preview...</span>
                 </div>
                 <iframe id="project-frame" src="" class="w-full h-full border-0 relative z-10" style="-webkit-overflow-scrolling: touch;" allowfullscreen></iframe>
             </div>
         </div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 glass transition-all duration-300 py-3 md:py-4">
-        <div class="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center">
-            <a href="#" class="text-lg md:text-xl font-bold tracking-tighter">PORTER<span class="text-blue-500">.DEV</span></a>
+    <!-- NAVBAR -->
+    <nav class="fixed w-full z-50 glass transition-all duration-300 py-3">
+        <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
+            <a href="#" class="text-lg font-bold tracking-tighter">PORTER<span class="text-blue-500">.DEV</span></a>
+            
             <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-400">
                 <a href="#builder-section" class="hover:text-white transition-colors">Process</a>
                 <a href="#portfolio" class="hover:text-white transition-colors">Work</a>
-                <a href="#automation" class="hover:text-white transition-colors">AI Automation</a>
-                <a href="#packages" class="hover:text-white transition-colors">Pricing</a>
+                <a href="#automation" class="hover:text-white transition-colors">Automation</a>
             </div>
-            <a href="#contact" class="bg-white text-black px-4 py-2 rounded-full text-xs md:text-sm font-bold hover:bg-gray-200 transition-transform hover:scale-105">
+            
+            <a href="#contact" class="bg-white text-black px-4 py-2 rounded-full text-xs font-bold active:scale-95 transition-transform">
                 Get a Demo
             </a>
         </div>
     </nav>
 
-    <!-- SECTION 1: HERO -->
-    <section class="relative min-h-screen flex flex-col items-center justify-center px-4">
-        <div class="text-center z-10 max-w-5xl mx-auto mt-10">
-            <div class="hero-animate inline-block px-3 py-1 mb-6 text-[10px] md:text-xs font-bold tracking-widest text-blue-400 uppercase bg-blue-500/10 rounded-full border border-blue-500/20 animate-pulse">
+    <!-- HERO -->
+    <section class="relative min-h-screen flex flex-col items-center justify-center px-4 pt-10">
+        <div class="text-center z-10 max-w-4xl mx-auto">
+            <div class="hero-animate inline-block px-3 py-1 mb-4 text-[10px] font-bold tracking-widest text-blue-400 uppercase bg-blue-500/10 rounded-full border border-blue-500/20">
                 Based in Norman, OK
             </div>
-            <h1 class="hero-animate text-5xl md:text-8xl font-bold mb-6 md:mb-8 leading-tight tracking-tight">
+            <h1 class="hero-animate text-5xl md:text-8xl font-bold mb-6 leading-tight tracking-tight">
                 Websites that <br>
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">work.</span>
             </h1>
-            <p class="hero-animate text-gray-300 text-lg md:text-2xl max-w-2xl mx-auto mb-8 md:mb-10 font-light px-4">
+            <p class="hero-animate text-gray-300 text-lg md:text-2xl max-w-xl mx-auto mb-8 font-light px-2">
                 Professional web development and AI automation for local businesses. 
             </p>
             
-            <div class="hero-animate flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#builder-section" class="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-full transition-all transform hover:scale-105 shadow-lg shadow-blue-600/20">
+            <div class="hero-animate flex flex-col gap-3 w-full max-w-xs mx-auto md:flex-row md:max-w-none md:justify-center">
+                <a href="#builder-section" class="px-8 py-4 bg-blue-600 text-white font-bold rounded-full text-center shadow-lg shadow-blue-600/20 active:scale-95 transition-transform">
                     See How It Works
                 </a>
-                <a href="#portfolio" class="px-8 py-4 border border-white/20 bg-white/5 backdrop-blur-sm hover:bg-white/10 rounded-full transition-all font-medium">
+                <a href="#portfolio" class="px-8 py-4 border border-white/20 bg-white/5 backdrop-blur-sm rounded-full text-center font-medium active:scale-95 transition-transform">
                     View Projects
                 </a>
             </div>
         </div>
         
-        <div class="hero-animate absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-gray-500">
+        <div class="hero-animate absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce text-gray-500">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
         </div>
     </section>
 
-    <!-- SECTION 2: THE BUILDER ANIMATION -->
-    <section id="builder-section" class="relative h-[100dvh] w-full flex flex-col items-center justify-center overflow-hidden bg-black/40 backdrop-blur-sm z-10">
-        <div class="absolute top-24 md:top-20 z-10 text-center w-full px-4 mb-10">
+    <!-- BUILDER ANIMATION -->
+    <section id="builder-section" class="relative py-20 md:h-screen md:py-0 w-full flex flex-col items-center justify-center overflow-hidden bg-black/40 backdrop-blur-sm z-10">
+        <div class="relative z-10 text-center w-full px-4 mb-8 md:absolute md:top-20">
             <h2 class="text-2xl md:text-4xl font-bold mb-2">Watch Your Site Come to Life</h2>
-            <p class="text-gray-400 text-sm md:text-base">Scroll down to build the interface</p>
+            <p class="text-gray-400 text-sm">Scroll to build the interface</p>
         </div>
 
         <div id="builder-stage" class="w-full max-w-5xl px-4 relative flex items-center justify-center">
@@ -339,41 +318,52 @@
             <div class="browser-window w-full max-w-4xl aspect-video bg-white relative shadow-2xl">
                 <div class="browser-header">
                     <div class="dot bg-red"></div><div class="dot bg-yellow"></div><div class="dot bg-green"></div>
-                    <div class="ml-4 h-3 md:h-4 bg-gray-700 rounded-full w-1/2 opacity-50 text-[8px] md:text-[10px] flex items-center px-2 text-gray-400 font-mono">https://your-business.com</div>
+                    <div class="ml-auto w-1/2 h-3 bg-gray-100 rounded-full"></div>
                 </div>
                 <div class="relative h-full bg-white overflow-hidden flex flex-col">
                     <!-- Nav -->
-                    <div class="mock-nav w-full flex items-center justify-between px-4 md:px-6 py-2 md:py-3 bg-white shadow-sm relative z-20">
-                        <div class="w-16 md:w-24 h-3 md:h-4 bg-gray-800 rounded"></div> 
-                        <div class="flex gap-2 md:gap-4"><div class="w-8 md:w-12 h-2 bg-gray-300 rounded"></div><div class="w-8 md:w-12 h-2 bg-gray-300 rounded"></div><div class="w-12 md:w-20 h-6 md:h-8 bg-blue-600 rounded-full"></div></div>
+                    <div class="mock-nav w-full flex items-center justify-between px-4 py-2 bg-white shadow-sm relative z-20">
+                        <div class="w-16 h-3 bg-gray-800 rounded"></div> 
+                        <div class="flex gap-2"><div class="w-8 h-2 bg-gray-300 rounded"></div><div class="w-8 h-2 bg-gray-300 rounded"></div></div>
                     </div>
                     <!-- Hero -->
                     <div class="mock-hero w-full flex-shrink-0 relative overflow-hidden">
                         <div class="absolute inset-0 bg-gray-50"></div>
-                        <div class="relative z-10 text-center w-full px-4 md:px-10">
-                            <div class="w-3/4 h-6 md:h-8 bg-gray-800 rounded mx-auto mb-2 md:mb-4 mock-hero-text"></div><div class="w-1/2 h-3 md:h-4 bg-gray-400 rounded mx-auto mock-hero-sub"></div>
-                            <div class="flex justify-center gap-4 mt-4 md:mt-8"><div class="w-24 md:w-32 h-8 md:h-10 bg-blue-600 rounded mock-btn shadow-lg"></div></div>
+                        <div class="relative z-10 text-center w-full px-4">
+                            <div class="w-3/4 h-6 bg-gray-800 rounded mx-auto mb-2 mock-hero-text"></div>
+                            <div class="w-1/2 h-3 bg-gray-400 rounded mx-auto mock-hero-sub"></div>
+                            <div class="flex justify-center gap-4 mt-4"><div class="w-24 h-8 bg-blue-600 rounded mock-btn shadow-lg"></div></div>
                         </div>
                     </div>
                     <!-- Grid -->
                     <div class="mock-grid w-full flex-grow bg-white">
-                        <div class="mock-card p-2 md:p-4 flex flex-col gap-2 shadow-sm border border-gray-100"><div class="w-6 h-6 md:w-8 md:h-8 bg-blue-100 rounded-full mb-2"></div><div class="w-16 md:w-20 h-2 md:h-3 bg-gray-800 rounded"></div><div class="w-full h-2 bg-gray-200 rounded"></div></div>
-                        <div class="mock-card p-2 md:p-4 flex flex-col gap-2 shadow-sm border border-gray-100"><div class="w-6 h-6 md:w-8 md:h-8 bg-purple-100 rounded-full mb-2"></div><div class="w-16 md:w-20 h-2 md:h-3 bg-gray-800 rounded"></div><div class="w-full h-2 bg-gray-200 rounded"></div></div>
-                        <div class="mock-card p-2 md:p-4 flex flex-col gap-2 shadow-sm border border-gray-100"><div class="w-6 h-6 md:w-8 md:h-8 bg-green-100 rounded-full mb-2"></div><div class="w-16 md:w-20 h-2 md:h-3 bg-gray-800 rounded"></div><div class="w-full h-2 bg-gray-200 rounded"></div></div>
+                        <div class="mock-card"></div>
+                        <div class="mock-card"></div>
+                        <div class="mock-card"></div>
                     </div>
-                    <!-- NEW: Testimonials -->
+                    
+                    <!-- Testimonials & Footer -->
                     <div class="mock-testimonials bg-white">
                         <div class="mock-bubble shadow-sm"></div>
                         <div class="mock-bubble shadow-sm"></div>
                     </div>
-                    <!-- NEW: Footer -->
                     <div class="mock-footer w-full"></div>
 
-                    <!-- Automation Badge -->
-                    <div class="mock-automation absolute top-12 md:top-16 right-2 md:right-4 bg-zinc-900 text-white p-3 md:p-4 rounded-lg shadow-2xl opacity-0 scale-75 flex flex-col gap-2 text-[10px] md:text-xs z-30 border border-zinc-700 w-32 md:w-48">
-                        <div class="flex items-center gap-2 border-b border-gray-700 pb-2 mb-1"><div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div><span class="font-bold">AI Agent Active</span></div>
-                        <div class="flex items-center gap-2 opacity-70"><div class="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center text-[8px]">1</div><span>Lead Captured</span></div>
-                         <div class="flex items-center gap-2 opacity-70"><div class="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center text-[8px]">2</div><span>Email Sent</span></div>
+                    <!-- Automation Badge with Details -->
+                    <!-- MOVED: from bottom-4 right-4 TO top-20 right-10 -->
+                    <div class="mock-automation absolute top-20 right-10 bg-zinc-900 text-white p-3 rounded-lg shadow-xl opacity-0 scale-75 flex flex-col gap-2 text-[10px] z-30 border border-zinc-700 w-32 md:w-48">
+                        <div class="flex items-center gap-2 border-b border-gray-700 pb-2 mb-1">
+                            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            <span class="font-bold">AI Agent Active</span>
+                        </div>
+                        <div class="flex items-center gap-2 opacity-70">
+                            <div class="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center text-[8px] font-bold text-black">1</div>
+                            <span>Lead Captured</span>
+                        </div>
+                         <div class="flex items-center gap-2 opacity-70">
+                            <div class="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center text-[8px] font-bold text-black">2</div>
+                            <span>Email Sent</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -381,11 +371,11 @@
     </section>
 
     <!-- VALUE PROPOSITION -->
-    <section id="value-section" class="py-24 bg-black/80 backdrop-blur-md relative z-20">
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-            <div>
-                <h2 class="text-3xl md:text-4xl font-bold mb-6 display-font" id="value-headline">Engineering Real<br>Business Value.</h2>
-                <div class="space-y-6 text-gray-400 value-text text-sm md:text-base">
+    <section id="value-section" class="py-20 bg-black/80 backdrop-blur-md relative z-20">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div class="order-2 md:order-1">
+                <h2 class="text-3xl font-bold mb-6" id="value-headline">Engineering Real<br>Business Value.</h2>
+                <div class="space-y-6 text-gray-400 value-text text-sm leading-relaxed">
                     <p>I combine advanced technical skills with a deep understanding of local business needs. My goal isn't just to write code—it's to build digital assets that drive engagement and efficiency.</p>
                     <p><strong>Experience the quality before you commit.</strong> I develop fully functional concept demos for your business at no cost, ensuring our vision aligns perfectly with your goals before any investment is made.</p>
                     <ul class="space-y-3 mt-4">
@@ -395,25 +385,25 @@
                     </ul>
                 </div>
             </div>
-            <div class="relative">
-                <div class="glass-card p-8 rounded-2xl border-l-2 border-gray-800" id="process-card">
+            <div class="relative order-1 md:order-2">
+                <div class="glass-card p-6 md:p-8 rounded-2xl border-l-2 border-gray-800">
                     <h3 class="text-xl font-bold mb-6 border-b border-gray-800 pb-4">My Process</h3>
-                    <div class="space-y-12 relative">
-                        <div class="absolute left-[19px] top-2 bottom-2 w-0.5 bg-gray-800 overflow-hidden">
-                            <div id="process-line-fill" class="w-full bg-blue-500 h-0 shadow-[0_0_10px_#3b82f6]"></div>
+                    <div class="space-y-8 relative">
+                        <div class="absolute left-[15px] top-2 bottom-2 w-0.5 bg-gray-800 overflow-hidden">
+                            <div id="process-line-fill" class="w-full bg-blue-500 h-0"></div>
                         </div>
                         
                         <div class="flex gap-4 relative z-10 group process-step" id="step-1">
-                            <div class="process-dot w-10 h-10 rounded-full bg-gray-900 border border-gray-700 flex items-center justify-center font-bold text-gray-500 transition-colors">1</div>
-                            <div><h4 class="font-bold text-white">Plan & Design</h4><p class="text-xs md:text-sm text-gray-500">We discuss your goals. I build a free demo.</p></div>
+                            <div class="process-dot w-8 h-8 rounded-full bg-gray-900 border border-gray-700 flex items-center justify-center font-bold text-xs text-gray-500">1</div>
+                            <div><h4 class="font-bold text-white text-sm">Plan & Design</h4><p class="text-xs text-gray-500">We discuss your goals. I build a free demo.</p></div>
                         </div>
                         <div class="flex gap-4 relative z-10 group process-step" id="step-2">
-                            <div class="process-dot w-10 h-10 rounded-full bg-gray-900 border border-gray-700 flex items-center justify-center font-bold text-gray-500 transition-colors">2</div>
-                            <div><h4 class="font-bold text-white">Build & Launch</h4><p class="text-xs md:text-sm text-gray-500">Custom development, deployed fast.</p></div>
+                            <div class="process-dot w-8 h-8 rounded-full bg-gray-900 border border-gray-700 flex items-center justify-center font-bold text-xs text-gray-500">2</div>
+                            <div><h4 class="font-bold text-white text-sm">Build & Launch</h4><p class="text-xs text-gray-500">Custom development, deployed fast.</p></div>
                         </div>
                         <div class="flex gap-4 relative z-10 group process-step" id="step-3">
-                            <div class="process-dot w-10 h-10 rounded-full bg-gray-900 border border-gray-700 flex items-center justify-center font-bold text-gray-500 transition-colors">3</div>
-                            <div><h4 class="font-bold text-white">Automate & Grow</h4><p class="text-xs md:text-sm text-gray-500">Add AI workflows to save you time.</p></div>
+                            <div class="process-dot w-8 h-8 rounded-full bg-gray-900 border border-gray-700 flex items-center justify-center font-bold text-xs text-gray-500">3</div>
+                            <div><h4 class="font-bold text-white text-sm">Automate & Grow</h4><p class="text-xs text-gray-500">Add AI workflows to save you time.</p></div>
                         </div>
                     </div>
                 </div>
@@ -421,208 +411,211 @@
         </div>
     </section>
 
-    <!-- AI AUTOMATION SECTION -->
-    <section id="automation" class="py-24 bg-[#080808]/90 backdrop-blur-md relative overflow-hidden z-20">
+    <!-- AI AUTOMATION (Marquee) -->
+    <section id="automation" class="py-20 bg-[#080808]/90 backdrop-blur-md relative overflow-hidden z-20">
         <div class="w-full relative z-10">
-            <div class="text-center mb-16 px-6">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">Your Business on Autopilot</h2>
-                <p class="text-gray-400 max-w-2xl mx-auto text-sm md:text-base">I don't just build pretty sites. I build systems that handle your admin work automatically.</p>
+            <div class="text-center mb-12 px-6">
+                <h2 class="text-3xl font-bold mb-4">Your Business on Autopilot</h2>
+                <p class="text-gray-400 text-sm max-w-md mx-auto">Systems that handle your admin work automatically.</p>
             </div>
             <div class="marquee-container">
                 <div class="marquee-track">
-                    <!-- Cards (Simplified for brevity, assuming previous content) -->
-                     <div class="glass-card auto-card p-6 rounded-xl group"><div class="w-12 h-12 bg-blue-900/30 rounded-lg flex items-center justify-center mb-4 text-blue-400 group-hover:scale-110 transition-transform"><i data-lucide="calendar-clock"></i></div><h3 class="text-xl font-bold mb-2">Booking & Scheduling</h3><p class="text-gray-400 text-sm">AI assistants that handle appointment scheduling, cancellations, and reminders instantly.</p></div>
-                     <div class="glass-card auto-card p-6 rounded-xl group"><div class="w-12 h-12 bg-purple-900/30 rounded-lg flex items-center justify-center mb-4 text-purple-400 group-hover:scale-110 transition-transform"><i data-lucide="mail-check"></i></div><h3 class="text-xl font-bold mb-2">Lead Intake & Follow-up</h3><p class="text-gray-400 text-sm">Instant email responses, CRM data entry, and qualification of new leads 24/7.</p></div>
-                     <div class="glass-card auto-card p-6 rounded-xl group"><div class="w-12 h-12 bg-green-900/30 rounded-lg flex items-center justify-center mb-4 text-green-400 group-hover:scale-110 transition-transform"><i data-lucide="bot"></i></div><h3 class="text-xl font-bold mb-2">Admin AI Assistants</h3><p class="text-gray-400 text-sm">Custom chatbots trained on your business data to answer customer FAQs instantly.</p></div>
-                     <div class="glass-card auto-card p-6 rounded-xl group"><div class="w-12 h-12 bg-yellow-900/30 rounded-lg flex items-center justify-center mb-4 text-yellow-400 group-hover:scale-110 transition-transform"><i data-lucide="star"></i></div><h3 class="text-xl font-bold mb-2">Review Management</h3><p class="text-gray-400 text-sm">Automatically monitor Google Reviews and draft professional, personalized responses.</p></div>
-                     <div class="glass-card auto-card p-6 rounded-xl group"><div class="w-12 h-12 bg-pink-900/30 rounded-lg flex items-center justify-center mb-4 text-pink-400 group-hover:scale-110 transition-transform"><i data-lucide="share-2"></i></div><h3 class="text-xl font-bold mb-2">Social Media Autopilot</h3><p class="text-gray-400 text-sm">Turn project photos into captioned Instagram posts and schedule them automatically.</p></div>
-                     <div class="glass-card auto-card p-6 rounded-xl group"><div class="w-12 h-12 bg-indigo-900/30 rounded-lg flex items-center justify-center mb-4 text-indigo-400 group-hover:scale-110 transition-transform"><i data-lucide="receipt"></i></div><h3 class="text-xl font-bold mb-2">Smart Invoicing</h3><p class="text-gray-400 text-sm">Generate and send invoices automatically when a job status is marked as complete.</p></div>
-                     <!-- Duplicates -->
-                     <div class="glass-card auto-card p-6 rounded-xl group"><div class="w-12 h-12 bg-blue-900/30 rounded-lg flex items-center justify-center mb-4 text-blue-400 group-hover:scale-110 transition-transform"><i data-lucide="calendar-clock"></i></div><h3 class="text-xl font-bold mb-2">Booking & Scheduling</h3><p class="text-gray-400 text-sm">AI assistants that handle appointment scheduling, cancellations, and reminders instantly.</p></div>
-                     <div class="glass-card auto-card p-6 rounded-xl group"><div class="w-12 h-12 bg-purple-900/30 rounded-lg flex items-center justify-center mb-4 text-purple-400 group-hover:scale-110 transition-transform"><i data-lucide="mail-check"></i></div><h3 class="text-xl font-bold mb-2">Lead Intake & Follow-up</h3><p class="text-gray-400 text-sm">Instant email responses, CRM data entry, and qualification of new leads 24/7.</p></div>
-                     <div class="glass-card auto-card p-6 rounded-xl group"><div class="w-12 h-12 bg-green-900/30 rounded-lg flex items-center justify-center mb-4 text-green-400 group-hover:scale-110 transition-transform"><i data-lucide="bot"></i></div><h3 class="text-xl font-bold mb-2">Admin AI Assistants</h3><p class="text-gray-400 text-sm">Custom chatbots trained on your business data to answer customer FAQs instantly.</p></div>
-                     <div class="glass-card auto-card p-6 rounded-xl group"><div class="w-12 h-12 bg-yellow-900/30 rounded-lg flex items-center justify-center mb-4 text-yellow-400 group-hover:scale-110 transition-transform"><i data-lucide="star"></i></div><h3 class="text-xl font-bold mb-2">Review Management</h3><p class="text-gray-400 text-sm">Automatically monitor Google Reviews and draft professional, personalized responses.</p></div>
-                     <div class="glass-card auto-card p-6 rounded-xl group"><div class="w-12 h-12 bg-pink-900/30 rounded-lg flex items-center justify-center mb-4 text-pink-400 group-hover:scale-110 transition-transform"><i data-lucide="share-2"></i></div><h3 class="text-xl font-bold mb-2">Social Media Autopilot</h3><p class="text-gray-400 text-sm">Turn project photos into captioned Instagram posts and schedule them automatically.</p></div>
-                     <div class="glass-card auto-card p-6 rounded-xl group"><div class="w-12 h-12 bg-indigo-900/30 rounded-lg flex items-center justify-center mb-4 text-indigo-400 group-hover:scale-110 transition-transform"><i data-lucide="receipt"></i></div><h3 class="text-xl font-bold mb-2">Smart Invoicing</h3><p class="text-gray-400 text-sm">Generate and send invoices automatically when a job status is marked as complete.</p></div>
+                     <!-- Lead Intake -->
+                     <div class="glass-card auto-card p-6 rounded-xl group">
+                        <div class="w-12 h-12 bg-purple-900/30 rounded-lg flex items-center justify-center mb-4 text-purple-400 group-hover:scale-110 transition-transform"><i data-lucide="mail-check"></i></div>
+                        <h3 class="text-lg font-bold mb-1">Lead Intake & Follow-up</h3>
+                        <p class="text-gray-400 text-xs">Instant email responses, CRM data entry, and qualification of new leads 24/7.</p>
+                    </div>
+                     <!-- Admin AI -->
+                     <div class="glass-card auto-card p-6 rounded-xl group">
+                        <div class="w-12 h-12 bg-green-900/30 rounded-lg flex items-center justify-center mb-4 text-green-400 group-hover:scale-110 transition-transform"><i data-lucide="bot"></i></div>
+                        <h3 class="text-lg font-bold mb-1">Admin AI Assistants</h3>
+                        <p class="text-gray-400 text-xs">Custom chatbots trained on your business data to answer customer FAQs instantly.</p>
+                    </div>
+                     <!-- Review Mgmt -->
+                     <div class="glass-card auto-card p-6 rounded-xl group">
+                        <div class="w-12 h-12 bg-yellow-900/30 rounded-lg flex items-center justify-center mb-4 text-yellow-400 group-hover:scale-110 transition-transform"><i data-lucide="star"></i></div>
+                        <h3 class="text-lg font-bold mb-1">Review Management</h3>
+                        <p class="text-gray-400 text-xs">Automatically monitor Google Reviews and draft professional, personalized responses.</p>
+                    </div>
+                     <!-- Social Media -->
+                     <div class="glass-card auto-card p-6 rounded-xl group">
+                        <div class="w-12 h-12 bg-pink-900/30 rounded-lg flex items-center justify-center mb-4 text-pink-400 group-hover:scale-110 transition-transform"><i data-lucide="share-2"></i></div>
+                        <h3 class="text-lg font-bold mb-1">Social Media Autopilot</h3>
+                        <p class="text-gray-400 text-xs">Turn project photos into captioned Instagram posts and schedule them automatically.</p>
+                    </div>
+                     <!-- Invoicing -->
+                     <div class="glass-card auto-card p-6 rounded-xl group">
+                        <div class="w-12 h-12 bg-indigo-900/30 rounded-lg flex items-center justify-center mb-4 text-indigo-400 group-hover:scale-110 transition-transform"><i data-lucide="receipt"></i></div>
+                        <h3 class="text-lg font-bold mb-1">Smart Invoicing</h3>
+                        <p class="text-gray-400 text-xs">Generate and send invoices automatically when a job status is marked as complete.</p>
+                    </div>
+
+                     <!-- Duplicates for Loop -->
+                     <div class="glass-card auto-card p-6 rounded-xl group"><div class="w-12 h-12 bg-purple-900/30 rounded-lg flex items-center justify-center mb-4 text-purple-400 group-hover:scale-110 transition-transform"><i data-lucide="mail-check"></i></div><h3 class="text-lg font-bold mb-1">Lead Intake & Follow-up</h3><p class="text-gray-400 text-xs">Instant email responses, CRM data entry, and qualification of new leads 24/7.</p></div>
+                     <div class="glass-card auto-card p-6 rounded-xl group"><div class="w-12 h-12 bg-green-900/30 rounded-lg flex items-center justify-center mb-4 text-green-400 group-hover:scale-110 transition-transform"><i data-lucide="bot"></i></div><h3 class="text-lg font-bold mb-1">Admin AI Assistants</h3><p class="text-gray-400 text-xs">Custom chatbots trained on your business data to answer customer FAQs instantly.</p></div>
+                     <div class="glass-card auto-card p-6 rounded-xl group"><div class="w-12 h-12 bg-yellow-900/30 rounded-lg flex items-center justify-center mb-4 text-yellow-400 group-hover:scale-110 transition-transform"><i data-lucide="star"></i></div><h3 class="text-lg font-bold mb-1">Review Management</h3><p class="text-gray-400 text-xs">Automatically monitor Google Reviews and draft professional, personalized responses.</p></div>
+                     <div class="glass-card auto-card p-6 rounded-xl group"><div class="w-12 h-12 bg-pink-900/30 rounded-lg flex items-center justify-center mb-4 text-pink-400 group-hover:scale-110 transition-transform"><i data-lucide="share-2"></i></div><h3 class="text-lg font-bold mb-1">Social Media Autopilot</h3><p class="text-gray-400 text-xs">Turn project photos into captioned Instagram posts and schedule them automatically.</p></div>
+                     <div class="glass-card auto-card p-6 rounded-xl group"><div class="w-12 h-12 bg-indigo-900/30 rounded-lg flex items-center justify-center mb-4 text-indigo-400 group-hover:scale-110 transition-transform"><i data-lucide="receipt"></i></div><h3 class="text-lg font-bold mb-1">Smart Invoicing</h3><p class="text-gray-400 text-xs">Generate and send invoices automatically when a job status is marked as complete.</p></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- PORTFOLIO SECTION -->
-    <section id="portfolio" class="py-24 px-6 bg-black/80 z-20 relative">
+    <!-- PROJECTS (Mobile Optimized) -->
+    <section id="portfolio" class="py-20 px-4 bg-black/80 z-20 relative">
         <div class="max-w-7xl mx-auto">
-            <h2 class="text-3xl md:text-4xl font-bold mb-12">Recent Work & Demos</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <h2 class="text-3xl font-bold mb-10 text-center md:text-left">Recent Work</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
                 <!-- Project 1 -->
-                <div class="project-card-click-area group relative aspect-video bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-lg hover:shadow-green-900/20 transition-shadow" onclick="openProject('https://www.crimson-landscaping.com/', 'Crimson Landscaping')">
-                    <div class="hidden md:block absolute inset-0 w-[200%] h-[200%] origin-top-left transform scale-50 pointer-events-none bg-white"><iframe src="https://www.crimson-landscaping.com/" class="w-full h-full border-0" scrolling="no"></iframe></div>
-                    <div class="md:hidden absolute inset-0 bg-gradient-to-br from-gray-800 to-green-900"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 group-hover:opacity-40 transition-opacity z-10 pointer-events-none"></div>
-                    <div class="absolute bottom-0 left-0 p-6 translate-y-4 group-hover:translate-y-0 transition-transform z-20 pointer-events-none">
-                        <h3 class="text-2xl font-bold text-white">Crimson Landscaping</h3><p class="text-gray-300 text-sm mt-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">Design, Installation, Maintenance Booking</p>
+                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
+                    <div class="relative aspect-video bg-gray-800 group" onclick="openProject('https://www.crimson-landscaping.com/', 'Crimson Landscaping')">
+                        <div class="absolute inset-0 bg-gradient-to-br from-gray-800 to-green-900"></div>
+                        <div class="hidden md:block absolute inset-0 w-[200%] h-[200%] origin-top-left transform scale-50 pointer-events-none bg-white"><iframe src="https://www.crimson-landscaping.com/" class="w-full h-full border-0" scrolling="no"></iframe></div>
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/30 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                            <span class="bg-white text-black px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2">
+                                <i data-lucide="maximize-2" class="w-3 h-3"></i> Preview Site
+                            </span>
+                        </div>
                     </div>
-                    <div class="absolute top-4 right-4 bg-green-600 text-xs font-bold px-2 py-1 rounded uppercase flex items-center gap-1 z-20 pointer-events-none"><i data-lucide="maximize-2" class="w-3 h-3"></i> Preview</div>
+                    <div class="p-5">
+                        <h3 class="text-xl font-bold text-white">Crimson Landscaping</h3>
+                        <p class="text-gray-400 text-sm mt-1">Design, Installation, Maintenance Booking</p>
+                    </div>
                 </div>
 
                 <!-- Project 2 -->
-                <div class="project-card-click-area group relative aspect-video bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-lg hover:shadow-blue-900/20 transition-shadow" onclick="openProject('https://cr-horses.com/', 'Modern Horse Sales')">
-                    <div class="hidden md:block absolute inset-0 w-[200%] h-[200%] origin-top-left transform scale-50 pointer-events-none bg-white"><iframe src="https://cr-horses.com/" class="w-full h-full border-0" scrolling="no"></iframe></div>
-                    <div class="md:hidden absolute inset-0 bg-gradient-to-br from-gray-800 to-blue-900"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 group-hover:opacity-40 transition-opacity z-10 pointer-events-none"></div>
-                    <div class="absolute bottom-0 left-0 p-6 translate-y-4 group-hover:translate-y-0 transition-transform z-20 pointer-events-none">
-                        <h3 class="text-2xl font-bold text-white">Modern Horse Sales</h3><p class="text-gray-300 text-sm mt-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">Equestrian Sales Platform with Filters</p>
+                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
+                    <div class="relative aspect-video bg-gray-800 group" onclick="openProject('https://cr-horses.com/', 'Modern Horse Sales')">
+                        <div class="absolute inset-0 bg-gradient-to-br from-gray-800 to-blue-900"></div>
+                        <div class="hidden md:block absolute inset-0 w-[200%] h-[200%] origin-top-left transform scale-50 pointer-events-none bg-white"><iframe src="https://cr-horses.com/" class="w-full h-full border-0" scrolling="no"></iframe></div>
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/30 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                            <span class="bg-white text-black px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2">
+                                <i data-lucide="maximize-2" class="w-3 h-3"></i> Preview Site
+                            </span>
+                        </div>
                     </div>
-                    <div class="absolute top-4 right-4 bg-blue-600 text-xs font-bold px-2 py-1 rounded uppercase flex items-center gap-1 z-20 pointer-events-none"><i data-lucide="maximize-2" class="w-3 h-3"></i> Preview</div>
+                    <div class="p-5">
+                        <h3 class="text-xl font-bold text-white">Modern Horse Sales</h3>
+                        <p class="text-gray-400 text-sm mt-1">Equestrian Sales Platform with Filters</p>
+                    </div>
                 </div>
 
                 <!-- Project 3 -->
-                <div class="project-card-click-area group relative aspect-video bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-lg hover:shadow-green-900/20 transition-shadow" onclick="openProject('https://porspective.github.io/MDN-website/', 'MDN Lawn & Landscape')">
-                    <div class="hidden md:block absolute inset-0 w-[200%] h-[200%] origin-top-left transform scale-50 pointer-events-none bg-white"><iframe src="https://porspective.github.io/MDN-website/" class="w-full h-full border-0" scrolling="no"></iframe></div>
-                    <div class="md:hidden absolute inset-0 bg-gradient-to-br from-gray-800 to-green-900"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 group-hover:opacity-40 transition-opacity z-10 pointer-events-none"></div>
-                    <div class="absolute bottom-0 left-0 p-6 translate-y-4 group-hover:translate-y-0 transition-transform z-20 pointer-events-none">
-                        <h3 class="text-2xl font-bold text-white">MDN Lawn & Landscape</h3><p class="text-gray-300 text-sm mt-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">Lawn Maintenance Services & Quotes</p>
+                <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
+                    <div class="relative aspect-video bg-gray-800 group" onclick="openProject('https://porspective.github.io/MDN-website/', 'MDN Lawn & Landscape')">
+                        <div class="absolute inset-0 bg-gradient-to-br from-gray-800 to-green-900"></div>
+                        <div class="hidden md:block absolute inset-0 w-[200%] h-[200%] origin-top-left transform scale-50 pointer-events-none bg-white"><iframe src="https://porspective.github.io/MDN-website/" class="w-full h-full border-0" scrolling="no"></iframe></div>
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/30 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                            <span class="bg-white text-black px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2">
+                                <i data-lucide="maximize-2" class="w-3 h-3"></i> Preview Site
+                            </span>
+                        </div>
                     </div>
-                    <div class="absolute top-4 right-4 bg-green-600 text-xs font-bold px-2 py-1 rounded uppercase flex items-center gap-1 z-20 pointer-events-none"><i data-lucide="maximize-2" class="w-3 h-3"></i> Preview</div>
+                    <div class="p-5">
+                        <h3 class="text-xl font-bold text-white">MDN Lawn & Landscape</h3>
+                        <p class="text-gray-400 text-sm mt-1">Lawn Maintenance Services & Quotes</p>
+                    </div>
                 </div>
 
-                 <!-- CTA Card -->
-                <div class="rounded-xl bg-gradient-to-br from-blue-900 to-black border border-blue-800 flex items-center justify-center p-8 text-center">
-                    <div>
-                        <h3 class="text-2xl font-bold mb-2">Your Business Here?</h3>
-                        <p class="text-gray-300 mb-6 text-sm">I'm building free demos for Norman businesses right now.</p>
-                        <a href="#contact" class="bg-white text-black px-6 py-3 rounded-full font-bold hover:bg-blue-50 transition-colors">Request a Demo</a>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
 
     <!-- CONTACT -->
-    <section id="contact" class="py-24 px-6 z-20 relative">
-        <div class="max-w-5xl mx-auto glass-card p-8 md:p-12 rounded-3xl">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">Let's Build Something</h2>
-                <p class="text-gray-400 text-sm md:text-base">Based in Norman? I'd love to meet for coffee or hop on a call.</p>
+    <section id="contact" class="py-20 px-4 z-20 relative pb-32">
+        <div class="max-w-3xl mx-auto glass-card p-6 rounded-2xl">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold mb-2">Let's Build Something</h2>
+                <p class="text-gray-400 text-sm">Based in Norman? I'd love to meet.</p>
             </div>
-            <form class="space-y-8" action="https://formspree.io/f/mvglwblo" method="POST">
+
+            <form class="space-y-6" action="https://formspree.io/f/mvglwblo" method="POST">
                 <input type="hidden" name="interests" id="interest-input">
                 <input type="hidden" name="budget" id="budget-input">
 
-                <div class="space-y-4">
-                    <label class="block text-sm font-medium text-gray-400">I'm interested in...</label>
-                    <div class="flex flex-wrap gap-3">
+                <div class="space-y-3">
+                    <label class="block text-xs font-bold text-gray-500 uppercase">I'm interested in...</label>
+                    <div class="flex flex-wrap gap-2">
                         <button type="button" class="choice-chip selected" onclick="toggleChip(this)">Website Build</button>
                         <button type="button" class="choice-chip" onclick="toggleChip(this)">AI Automation</button>
-                        <button type="button" class="choice-chip" onclick="toggleChip(this)">Redesign</button>
-                        <button type="button" class="choice-chip" onclick="toggleChip(this)">SEO & Growth</button>
+                        <button type="button" class="choice-chip" onclick="toggleChip(this)">SEO</button>
                         <button type="button" class="choice-chip" onclick="toggleChip(this)">Other</button>
                     </div>
                 </div>
-                <div class="space-y-4">
-                    <label class="block text-sm font-medium text-gray-400">Budget Range</label>
-                    <div class="flex flex-wrap gap-3">
-                        <button type="button" class="choice-chip" onclick="toggleBudget(this)">$500 - $1k</button>
-                        <button type="button" class="choice-chip selected" onclick="toggleBudget(this)">$1k - $3k</button>
-                        <button type="button" class="choice-chip" onclick="toggleBudget(this)">$3k - $5k</button>
-                        <button type="button" class="choice-chip" onclick="toggleBudget(this)">$5k+</button>
+
+                <div class="space-y-3">
+                    <label class="block text-xs font-bold text-gray-500 uppercase">Budget</label>
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" class="choice-chip" onclick="toggleBudget(this)">$500-$1k</button>
+                        <button type="button" class="choice-chip selected" onclick="toggleBudget(this)">$1k-$3k</button>
+                        <button type="button" class="choice-chip" onclick="toggleBudget(this)">$3k+</button>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-400 mb-2">Full Name</label>
-                        <input type="text" name="name" class="w-full bg-black/50 border border-gray-700 rounded-lg px-4 py-3 focus:border-blue-500 focus:outline-none transition-colors text-white placeholder-gray-600" placeholder="Jane Doe" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-400 mb-2">Email Address</label>
-                        <input type="email" name="email" class="w-full bg-black/50 border border-gray-700 rounded-lg px-4 py-3 focus:border-blue-500 focus:outline-none transition-colors text-white placeholder-gray-600" placeholder="jane@business.com" required>
-                    </div>
+                <div class="space-y-4">
+                    <input type="text" name="name" class="w-full bg-black/40 border border-gray-700 rounded-lg px-4 py-3 focus:border-blue-500 outline-none text-white placeholder-gray-600 text-sm" placeholder="Full Name" required>
+                    <input type="email" name="email" class="w-full bg-black/40 border border-gray-700 rounded-lg px-4 py-3 focus:border-blue-500 outline-none text-white placeholder-gray-600 text-sm" placeholder="Email Address" required>
+                    <textarea rows="3" name="message" class="w-full bg-black/40 border border-gray-700 rounded-lg px-4 py-3 focus:border-blue-500 outline-none text-white placeholder-gray-600 text-sm" placeholder="Project details..." required></textarea>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-400 mb-2">Tell me about your project</label>
-                    <textarea rows="4" name="message" class="w-full bg-black/50 border border-gray-700 rounded-lg px-4 py-3 focus:border-blue-500 focus:outline-none transition-colors text-white placeholder-gray-600" placeholder="I need a website for my landscaping business..." required></textarea>
-                </div>
-                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] flex items-center justify-center gap-2">
+                
+                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg transition-all active:scale-95 flex items-center justify-center gap-2">
                     Send Message <i data-lucide="send" class="w-4 h-4"></i>
                 </button>
             </form>
-            <div class="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm">
-                <div class="mb-4 md:mb-0">
-                    <p>porter.j.robertson+website@gmail.com</p>
-                    <p>(580) 504-6396</p>
-                </div>
-                <div>
-                    Norman, Oklahoma
-                </div>
-            </div>
         </div>
     </section>
 
-    <footer class="py-8 text-center text-gray-700 text-sm z-20 relative">
-        <p>© 2025 Porter Robertson. All rights reserved.</p>
+    <footer class="py-6 text-center text-gray-600 text-xs z-20 relative">
+        <p>© 2025 Porter Robertson.</p>
     </footer>
 
     <script>
-        // THREE.JS SETUP
+        // INIT
+        lucide.createIcons();
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 1. THREE.JS (Simplified for Mobile Stability)
+        const canvasContainer = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        document.getElementById('canvas-container').appendChild(renderer.domElement);
+        canvasContainer.appendChild(renderer.domElement);
+        
+        // Prevent hijacking touches
         renderer.domElement.style.touchAction = 'none';
 
         const group = new THREE.Group();
         scene.add(group);
-        const geometry = new THREE.IcosahedronGeometry(0.5, 0);
+        
+        // Simpler geometry
+        const geometry = new THREE.IcosahedronGeometry(0.3, 0);
         const material = new THREE.MeshBasicMaterial({ color: 0x3b82f6, wireframe: true, transparent: true, opacity: 0.3 });
-        const solidMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.1 });
+        
+        const particleCount = window.innerWidth < 768 ? 30 : 80; // Reduced count
         const particles = [];
         
-        const particleCount = window.innerWidth < 768 ? 40 : 80; 
         for (let i = 0; i < particleCount; i++) {
-            const isSolid = Math.random() > 0.7;
-            const mesh = new THREE.Mesh(geometry, isSolid ? solidMaterial : material);
-            mesh.position.x = (Math.random() - 0.5) * 40;
-            mesh.position.y = (Math.random() - 0.5) * 40;
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.position.x = (Math.random() - 0.5) * 30;
+            mesh.position.y = (Math.random() - 0.5) * 30;
             mesh.position.z = (Math.random() - 0.5) * 30;
-            mesh.rotation.x = Math.random() * Math.PI;
-            mesh.rotation.y = Math.random() * Math.PI;
-            const scale = Math.random() * 1.5 + 0.5;
-            mesh.scale.set(scale, scale, scale);
             group.add(mesh);
-            particles.push({ mesh: mesh, speed: Math.random() * 0.005 + 0.001, rotSpeed: Math.random() * 0.01 });
+            particles.push({ mesh, speed: Math.random() * 0.002 });
         }
-        camera.position.z = 15;
-        
-        let mouseX = 0, mouseY = 0;
-        let targetX = 0, targetY = 0;
-        const windowHalfX = window.innerWidth / 2;
-        const windowHalfY = window.innerHeight / 2;
-
-        document.addEventListener('mousemove', (event) => {
-            mouseX = (event.clientX - windowHalfX);
-            mouseY = (event.clientY - windowHalfY);
-        });
-        document.addEventListener('touchmove', (event) => {
-             if (event.touches.length > 0) {
-                mouseX = (event.touches[0].clientX - windowHalfX);
-                mouseY = (event.touches[0].clientY - windowHalfY);
-             }
-        });
+        camera.position.z = 10;
 
         function animateThree() {
             requestAnimationFrame(animateThree);
-            targetX = mouseX * 0.001;
-            targetY = mouseY * 0.001;
-            group.rotation.y += 0.002;
-            group.rotation.x += (targetY - group.rotation.x) * 0.05;
-            group.rotation.y += (targetX - group.rotation.y) * 0.05;
+            group.rotation.y += 0.001;
             particles.forEach(p => {
-                p.mesh.rotation.x += p.rotSpeed;
-                p.mesh.rotation.y += p.rotSpeed;
+                p.mesh.rotation.x += p.speed;
+                p.mesh.rotation.y += p.speed;
             });
             renderer.render(scene, camera);
         }
@@ -634,114 +627,86 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // GSAP ANIMATIONS
-        lucide.createIcons();
-        gsap.registerPlugin(ScrollTrigger);
 
-        const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
-        heroTl.from(".hero-animate", { y: 50, opacity: 0, filter: "blur(10px)", duration: 1.5, stagger: 0.2, delay: 0.5 });
+        // 2. GSAP ANIMATIONS (Responsive Logic)
+        
+        // Hero Entrance
+        gsap.from(".hero-animate", { y: 50, opacity: 0, duration: 1, stagger: 0.1, delay: 0.2 });
 
-        // --- RESPONSIVE BUILDER ANIMATION ---
-        // Use scrollTrigger.matchMedia for device-specific logic
+        // Builder Animation
         ScrollTrigger.matchMedia({
             
-            // Desktop (min-width: 768px)
+            // DESKTOP: Pinned & Complex
             "(min-width: 768px)": function() {
                 const tl = gsap.timeline({
                     scrollTrigger: { 
                         trigger: "#builder-section", 
                         start: "top top", 
-                        end: "+=3000", // Longer scroll for desktop feels premium
+                        end: "+=2000",
                         scrub: 1, 
-                        pin: true, 
-                        anticipatePin: 1 
+                        pin: true 
                     }
                 });
-                
-                // Complex Animation with Cursor
                 tl.to("#cursor", { opacity: 1, duration: 0.1 })
-                  .to("#cursor", { top: "15%", left: "20%", duration: 0.5 })
-                  .to(".mock-nav", { opacity: 1, duration: 0.3 })
+                  .to("#cursor", { top: "20%", left: "20%", duration: 1 })
+                  .to(".mock-nav", { opacity: 1, duration: 0.5 })
+                  .to("#cursor", { top: "40%", left: "50%", duration: 1 })
+                  .to(".mock-hero", { opacity: 1, scale: 1, duration: 0.5 })
+                  .to("#cursor", { top: "70%", left: "70%", duration: 1 })
+                  .to(".mock-card", { opacity: 1, y: 0, stagger: 0.2, duration: 0.5 })
                   
-                  .to("#cursor", { top: "40%", left: "50%", duration: 0.5 })
-                  .to(".mock-hero", { opacity: 1, scale: 1, duration: 0.3 })
-                  .fromTo(".mock-hero-text", { width: 0 }, { width: "75%", duration: 0.3 })
-                  .fromTo(".mock-hero-sub", { width: 0 }, { width: "50%", duration: 0.3 })
-                  .fromTo(".mock-btn", { scale: 0 }, { scale: 1, duration: 0.2, ease: "back.out" })
-
-                  .to("#cursor", { top: "60%", left: "70%", duration: 0.5 })
-                  .to(".mock-card", { opacity: 1, y: 0, stagger: 0.1, duration: 0.3 })
-                  
-                  // New Elements
-                  .to("#cursor", { top: "80%", left: "40%", duration: 0.5 })
-                  .to(".mock-testimonials", { opacity: 1, y: 0, duration: 0.3 })
-                  
+                  // Restored Extra Steps for Desktop
+                  .to("#cursor", { top: "85%", left: "40%", duration: 0.5 })
+                  .to(".mock-testimonials", { opacity: 1, y: 0, duration: 0.5 })
                   .to("#cursor", { top: "95%", left: "50%", duration: 0.5 })
-                  .to(".mock-footer", { opacity: 1, duration: 0.3 })
-
-                  .to("#cursor", { top: "20%", left: "85%", duration: 0.5 })
-                  .to(".mock-automation", { opacity: 1, scale: 1, duration: 0.3, ease: "elastic.out(1, 0.5)" })
-                  .to("#cursor", { opacity: 0, duration: 0.2 });
+                  .to(".mock-footer", { opacity: 1, duration: 0.5 })
+                  
+                  .to("#cursor", { opacity: 0, duration: 0.2 })
+                  .to(".mock-automation", { opacity: 1, scale: 1, duration: 0.3, ease: "elastic.out(1, 0.5)" });
             },
 
-            // Mobile (max-width: 767px)
+            // MOBILE: Unpinned & Simple Fade In
             "(max-width: 767px)": function() {
                 const tl = gsap.timeline({
                     scrollTrigger: { 
                         trigger: "#builder-section", 
-                        start: "top top", 
-                        end: "+=150%", // Shorter scroll for mobile
-                        scrub: 0.5, // Slightly smoother scrubbing
-                        pin: true, 
-                        anticipatePin: 1 
+                        start: "top 60%",
+                        end: "bottom 80%",
+                        scrub: 1
                     }
                 });
-                
-                // Simple Auto-Build (No Cursor)
-                tl.to(".mock-nav", { opacity: 1, duration: 0.5 })
-                  .to(".mock-hero", { opacity: 1, scale: 1, duration: 0.5 }, "-=0.3")
-                  .fromTo(".mock-hero-text", { width: 0 }, { width: "75%", duration: 0.5 })
-                  .fromTo(".mock-hero-sub", { width: 0 }, { width: "50%", duration: 0.5 }, "-=0.3")
-                  .to(".mock-card", { opacity: 1, y: 0, stagger: 0.1, duration: 0.5 })
-                  .to(".mock-testimonials", { opacity: 1, y: 0, duration: 0.5 })
-                  .to(".mock-footer", { opacity: 1, duration: 0.5 })
-                  .to(".mock-automation", { opacity: 1, scale: 1, duration: 0.5, ease: "elastic.out(1, 0.5)" });
+                tl.to(".mock-nav", { opacity: 1, duration: 1 })
+                  .to(".mock-hero", { opacity: 1, scale: 1, duration: 1 }, "-=0.5")
+                  .to(".mock-card", { opacity: 1, y: 0, stagger: 0.2, duration: 1 }, "-=0.5")
+                  
+                  // Restored Extra Steps for Mobile
+                  .to(".mock-testimonials", { opacity: 1, y: 0, duration: 1 }, "-=0.5")
+                  .to(".mock-footer", { opacity: 1, duration: 1 }, "-=0.5")
+                  
+                  .to(".mock-automation", { opacity: 1, scale: 1, duration: 1 });
             }
         });
 
-        // Section Reveals
-        const sections = document.querySelectorAll("section:not(#builder-section):not(:first-child)");
-        sections.forEach(section => {
-            if(section.id === 'value-section') return;
-            if(section.id === 'automation') {
-                gsap.from(".marquee-container", { scrollTrigger: { trigger: "#automation", start: "top 85%", toggleActions: "play none none reverse" }, y: 50, opacity: 0, duration: 1, ease: "power2.out" });
-                gsap.from(section.querySelector('.text-center'), { scrollTrigger: { trigger: section, start: "top 90%", toggleActions: "play none none reverse" }, y: 30, opacity: 0, duration: 0.8 });
-            } else {
-                gsap.from(section.children, { scrollTrigger: { trigger: section, start: "top 85%", toggleActions: "play none none reverse" }, y: 30, opacity: 0, duration: 0.8, stagger: 0.1, ease: "power2.out" });
-            }
-        });
+        // Process Animation
+        gsap.timeline({
+            scrollTrigger: { trigger: "#value-section", start: "top 70%" }
+        })
+        .from("#value-headline", { opacity: 0, x: -20, duration: 1 })
+        .to("#process-line-fill", { height: "100%", duration: 1.5 }, "-=0.5")
+        .add(() => document.getElementById('step-1').classList.add('active'), "-=1.3")
+        .add(() => document.getElementById('step-2').classList.add('active'), "-=0.9")
+        .add(() => document.getElementById('step-3').classList.add('active'), "-=0.4");
 
-        // Value Proposition Animation
-        const valueTl = gsap.timeline({
-            scrollTrigger: { trigger: "#value-section", start: "top 60%", toggleActions: "play none none reverse" }
-        });
-        valueTl.from("#value-headline", { duration: 1, opacity: 0, x: -50, ease: "power3.out" })
-               .from(".value-text > *", { opacity: 0, x: -20, stagger: 0.1, duration: 0.8 }, "-=0.5")
-               .to("#process-line-fill", { height: "100%", duration: 2, ease: "none" }, "-=1")
-               .add(() => document.getElementById('step-1').classList.add('active'), "-=1.8")
-               .add(() => document.getElementById('step-2').classList.add('active'), "-=1.2")
-               .add(() => document.getElementById('step-3').classList.add('active'), "-=0.6");
 
-        // Modal Logic
+        // 3. INTERACTION LOGIC (Modal & Forms)
         const modal = document.getElementById('project-modal');
-        const modalContent = document.querySelector('.modal-content');
         const iframe = document.getElementById('project-frame');
         const urlDisplay = document.getElementById('modal-url-display');
         const externalLink = document.getElementById('modal-external-link');
 
         function openProject(url, title) {
             iframe.src = url;
-            urlDisplay.innerText = url;
+            urlDisplay.innerText = url.replace('https://','');
             externalLink.href = url;
             modal.classList.add('open');
         }
@@ -765,6 +730,7 @@
             updateHiddenInputs();
         }
         updateHiddenInputs();
+
     </script>
 </body>
 </html>
