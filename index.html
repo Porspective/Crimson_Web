@@ -349,8 +349,7 @@
                     </div>
                     <div class="mock-footer w-full"></div>
 
-                    <!-- Automation Badge with Details -->
-                    <!-- MOVED: from bottom-4 right-4 TO top-20 right-10 -->
+                    <!-- Automation Badge -->
                     <div class="mock-automation absolute top-20 right-10 bg-zinc-900 text-white p-3 rounded-lg shadow-xl opacity-0 scale-75 flex flex-col gap-2 text-[10px] z-30 border border-zinc-700 w-32 md:w-48">
                         <div class="flex items-center gap-2 border-b border-gray-700 pb-2 mb-1">
                             <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
@@ -462,7 +461,7 @@
         </div>
     </section>
 
-    <!-- PROJECTS (Mobile Optimized) -->
+    <!-- PROJECTS -->
     <section id="portfolio" class="py-20 px-4 bg-black/80 z-20 relative">
         <div class="max-w-7xl mx-auto">
             <h2 class="text-3xl font-bold mb-10 text-center md:text-left">Recent Work</h2>
@@ -471,9 +470,14 @@
                 
                 <!-- Project 1 -->
                 <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                    <div class="relative aspect-video bg-gray-800 group" onclick="openProject('https://www.crimson-landscaping.com/', 'Crimson Landscaping')">
+                    <div class="project-card-click-area relative aspect-video bg-gray-800 group" onclick="openProject('https://www.crimson-landscaping.com/', 'Crimson Landscaping')">
                         <div class="absolute inset-0 bg-gradient-to-br from-gray-800 to-green-900"></div>
-                        <div class="hidden md:block absolute inset-0 w-[200%] h-[200%] origin-top-left transform scale-50 pointer-events-none bg-white"><iframe src="https://www.crimson-landscaping.com/" class="w-full h-full border-0" scrolling="no"></iframe></div>
+                        <!-- Desktop Iframe loaded only on large screens -->
+                        <div class="hidden md:block absolute inset-0 w-[200%] h-[200%] origin-top-left transform scale-50 pointer-events-none bg-white"><iframe src="https://www.crimson-landscaping.com/" class="w-full h-full border-0" loading="lazy" scrolling="no"></iframe></div>
+                        <!-- Mobile Scaled Iframe -->
+                        <div class="md:hidden absolute inset-0 w-[300%] h-[300%] origin-top-left transform scale-[0.333] pointer-events-none bg-white"><iframe src="https://www.crimson-landscaping.com/" class="w-full h-full border-0" loading="lazy" scrolling="no"></iframe></div>
+                        
+                        <!-- Hover Overlay -->
                         <div class="absolute inset-0 flex items-center justify-center bg-black/30 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                             <span class="bg-white text-black px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2">
                                 <i data-lucide="maximize-2" class="w-3 h-3"></i> Preview Site
@@ -488,9 +492,11 @@
 
                 <!-- Project 2 -->
                 <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                    <div class="relative aspect-video bg-gray-800 group" onclick="openProject('https://cr-horses.com/', 'Modern Horse Sales')">
+                    <div class="project-card-click-area relative aspect-video bg-gray-800 group" onclick="openProject('https://cr-horses.com/', 'Modern Horse Sales')">
                         <div class="absolute inset-0 bg-gradient-to-br from-gray-800 to-blue-900"></div>
-                        <div class="hidden md:block absolute inset-0 w-[200%] h-[200%] origin-top-left transform scale-50 pointer-events-none bg-white"><iframe src="https://cr-horses.com/" class="w-full h-full border-0" scrolling="no"></iframe></div>
+                        <div class="hidden md:block absolute inset-0 w-[200%] h-[200%] origin-top-left transform scale-50 pointer-events-none bg-white"><iframe src="https://cr-horses.com/" class="w-full h-full border-0" loading="lazy" scrolling="no"></iframe></div>
+                         <div class="md:hidden absolute inset-0 w-[300%] h-[300%] origin-top-left transform scale-[0.333] pointer-events-none bg-white"><iframe src="https://cr-horses.com/" class="w-full h-full border-0" loading="lazy" scrolling="no"></iframe></div>
+                        
                         <div class="absolute inset-0 flex items-center justify-center bg-black/30 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                             <span class="bg-white text-black px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2">
                                 <i data-lucide="maximize-2" class="w-3 h-3"></i> Preview Site
@@ -505,9 +511,11 @@
 
                 <!-- Project 3 -->
                 <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                    <div class="relative aspect-video bg-gray-800 group" onclick="openProject('https://porspective.github.io/MDN-website/', 'MDN Lawn & Landscape')">
+                    <div class="project-card-click-area relative aspect-video bg-gray-800 group" onclick="openProject('https://porspective.github.io/MDN-website/', 'MDN Lawn & Landscape')">
                         <div class="absolute inset-0 bg-gradient-to-br from-gray-800 to-green-900"></div>
-                        <div class="hidden md:block absolute inset-0 w-[200%] h-[200%] origin-top-left transform scale-50 pointer-events-none bg-white"><iframe src="https://porspective.github.io/MDN-website/" class="w-full h-full border-0" scrolling="no"></iframe></div>
+                        <div class="hidden md:block absolute inset-0 w-[200%] h-[200%] origin-top-left transform scale-50 pointer-events-none bg-white"><iframe src="https://porspective.github.io/MDN-website/" class="w-full h-full border-0" loading="lazy" scrolling="no"></iframe></div>
+                        <div class="md:hidden absolute inset-0 w-[300%] h-[300%] origin-top-left transform scale-[0.333] pointer-events-none bg-white"><iframe src="https://porspective.github.io/MDN-website/" class="w-full h-full border-0" loading="lazy" scrolling="no"></iframe></div>
+                        
                         <div class="absolute inset-0 flex items-center justify-center bg-black/30 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                             <span class="bg-white text-black px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2">
                                 <i data-lucide="maximize-2" class="w-3 h-3"></i> Preview Site
@@ -517,6 +525,15 @@
                     <div class="p-5">
                         <h3 class="text-xl font-bold text-white">MDN Lawn & Landscape</h3>
                         <p class="text-gray-400 text-sm mt-1">Lawn Maintenance Services & Quotes</p>
+                    </div>
+                </div>
+
+                <!-- Project 4 (Restored) -->
+                <div class="bg-gradient-to-br from-blue-900 to-black rounded-xl overflow-hidden border border-blue-800 flex items-center justify-center p-8 text-center">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-2 text-white">Your Business Here?</h3>
+                        <p class="text-gray-300 mb-6 text-sm">I'm building free demos for Norman businesses right now.</p>
+                        <a href="#contact" class="bg-white text-black px-6 py-3 rounded-full font-bold hover:bg-blue-50 transition-colors inline-block">Request a Demo</a>
                     </div>
                 </div>
 
@@ -569,7 +586,7 @@
     </section>
 
     <footer class="py-6 text-center text-gray-600 text-xs z-20 relative">
-        <p>© 2025 Porter Robertson.</p>
+        <p>© 2025 Porter Robertson. All rights reserved.</p>
     </footer>
 
     <script>
@@ -577,57 +594,99 @@
         lucide.createIcons();
         gsap.registerPlugin(ScrollTrigger);
 
-        // 1. THREE.JS (Simplified for Mobile Stability)
+        // 1. MOBILE BACKGROUND ANIMATION (Lightweight)
+        // If on mobile, run simple canvas loop instead of heavy Three.js
         const canvasContainer = document.getElementById('canvas-container');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        canvasContainer.appendChild(renderer.domElement);
-        
-        // Prevent hijacking touches
-        renderer.domElement.style.touchAction = 'none';
+        if (window.innerWidth < 768) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            canvasContainer.appendChild(canvas);
+            
+            const stars = [];
+            for(let i=0; i<50; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 1.5,
+                    speed: Math.random() * 0.5
+                });
+            }
 
-        const group = new THREE.Group();
-        scene.add(group);
-        
-        // Simpler geometry
-        const geometry = new THREE.IcosahedronGeometry(0.3, 0);
-        const material = new THREE.MeshBasicMaterial({ color: 0x3b82f6, wireframe: true, transparent: true, opacity: 0.3 });
-        
-        const particleCount = window.innerWidth < 768 ? 30 : 80; // Reduced count
-        const particles = [];
-        
-        for (let i = 0; i < particleCount; i++) {
-            const mesh = new THREE.Mesh(geometry, material);
-            mesh.position.x = (Math.random() - 0.5) * 30;
-            mesh.position.y = (Math.random() - 0.5) * 30;
-            mesh.position.z = (Math.random() - 0.5) * 30;
-            group.add(mesh);
-            particles.push({ mesh, speed: Math.random() * 0.002 });
-        }
-        camera.position.z = 10;
-
-        function animateThree() {
-            requestAnimationFrame(animateThree);
-            group.rotation.y += 0.001;
-            particles.forEach(p => {
-                p.mesh.rotation.x += p.speed;
-                p.mesh.rotation.y += p.speed;
-            });
-            renderer.render(scene, camera);
-        }
-        animateThree();
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
+            function animateMobile() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                
+                stars.forEach(star => {
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                    star.y -= star.speed; // Move up
+                    if (star.y < 0) star.y = canvas.height;
+                });
+                requestAnimationFrame(animateMobile);
+            }
+            animateMobile();
+        } 
+        else {
+            // DESKTOP: Three.js
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            canvasContainer.appendChild(renderer.domElement);
+            
+            // Prevent hijacking touches
+            renderer.domElement.style.touchAction = 'none';
 
+            const group = new THREE.Group();
+            scene.add(group);
+            
+            const geometry = new THREE.IcosahedronGeometry(0.3, 0);
+            const material = new THREE.MeshBasicMaterial({ color: 0x3b82f6, wireframe: true, transparent: true, opacity: 0.3 });
+            
+            const particleCount = 80;
+            const particles = [];
+            
+            for (let i = 0; i < particleCount; i++) {
+                const mesh = new THREE.Mesh(geometry, material);
+                mesh.position.x = (Math.random() - 0.5) * 40;
+                mesh.position.y = (Math.random() - 0.5) * 40;
+                mesh.position.z = (Math.random() - 0.5) * 30;
+                group.add(mesh);
+                particles.push({ mesh, speed: Math.random() * 0.002 });
+            }
+            camera.position.z = 10;
 
+            let mouseX = 0, mouseY = 0;
+            let targetX = 0, targetY = 0;
+            const windowHalfX = window.innerWidth / 2;
+            const windowHalfY = window.innerHeight / 2;
+
+            document.addEventListener('mousemove', (event) => {
+                mouseX = (event.clientX - windowHalfX);
+                mouseY = (event.clientY - windowHalfY);
+            });
+
+            function animateThree() {
+                requestAnimationFrame(animateThree);
+                targetX = mouseX * 0.001;
+                targetY = mouseY * 0.001;
+                group.rotation.y += 0.002;
+                group.rotation.x += (targetY - group.rotation.x) * 0.05;
+                group.rotation.y += (targetX - group.rotation.y) * 0.05;
+                particles.forEach(p => {
+                    p.mesh.rotation.x += p.speed;
+                    p.mesh.rotation.y += p.speed;
+                });
+                renderer.render(scene, camera);
+            }
+            animateThree();
+        }
+        
         // 2. GSAP ANIMATIONS (Responsive Logic)
         
         // Hero Entrance
@@ -665,7 +724,7 @@
                   .to(".mock-automation", { opacity: 1, scale: 1, duration: 0.3, ease: "elastic.out(1, 0.5)" });
             },
 
-            // MOBILE: Unpinned & Simple Fade In
+            // MOBILE: Unpinned & Simple Fade In (Play Once)
             "(max-width: 767px)": function() {
                 const tl = gsap.timeline({
                     scrollTrigger: { 
