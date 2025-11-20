@@ -2,7 +2,8 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Added maximum-scale to prevent auto-zoom on inputs disrupting layout -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Porter Robertson | Web & AI Automation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -31,6 +32,8 @@
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             margin: 0;
+            /* Prevent pull-to-refresh on mobile from ruining scrollTrigger */
+            overscroll-behavior: none;
         }
 
         h1, h2, h3, .display-font {
@@ -57,7 +60,7 @@
 
         /* Utilities */
         .glass {
-            background: rgba(20, 20, 20, 0.6);
+            background: rgba(20, 20, 20, 0.8); /* Darker on mobile for contrast */
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
@@ -73,8 +76,11 @@
             position: relative;
             overflow: hidden;
             transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
-            width: 350px;
+            width: 300px; /* Slightly smaller for mobile safety */
             flex-shrink: 0; 
+        }
+        @media (min-width: 768px) {
+            .auto-card { width: 350px; }
         }
         
         .auto-card::after {
@@ -111,7 +117,7 @@
 
         .marquee-track {
             display: flex;
-            gap: 2rem;
+            gap: 1.5rem;
             width: max-content;
             animation: scroll 40s linear infinite; 
         }
@@ -137,21 +143,29 @@
         }
         .browser-header {
             background: #2a2a2a;
-            padding: 12px;
+            padding: 8px 12px;
             display: flex;
-            gap: 8px;
+            gap: 6px;
             border-bottom: 1px solid #333;
         }
-        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; }
         .bg-red { background: #ef4444; }
         .bg-yellow { background: #eab308; }
         .bg-green { background: #22c55e; }
         
         /* Mockup Elements to Animate */
-        .mock-nav { height: 40px; border-bottom: 1px solid #eee; opacity: 0; }
-        .mock-hero { height: 200px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; opacity: 0; transform: scale(0.9); }
-        .mock-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 20px; }
-        .mock-card { height: 100px; background: #f3f4f6; border-radius: 8px; opacity: 0; transform: translateY(20px); }
+        .mock-nav { height: 30px; border-bottom: 1px solid #eee; opacity: 0; }
+        .mock-hero { height: 150px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; opacity: 0; transform: scale(0.9); }
+        .mock-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; padding: 15px; }
+        .mock-card { height: 60px; background: #f3f4f6; border-radius: 4px; opacity: 0; transform: translateY(20px); }
+
+        /* HIDE CURSOR ON MOBILE */
+        #cursor {
+            display: none;
+        }
+        @media (min-width: 768px) {
+            #cursor { display: block; }
+        }
 
         /* --- PROJECT MODAL STYLES --- */
         #project-modal {
@@ -161,7 +175,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            pointer-events: none; /* Allow click through when opacity is 0 */
+            pointer-events: none;
             opacity: 0;
         }
         
@@ -177,8 +191,8 @@
         }
 
         .modal-content {
-            width: 90vw;
-            height: 85vh;
+            width: 95vw;
+            height: 90vh;
             background: #1a1a1a;
             border: 1px solid #333;
             border-radius: 12px;
@@ -198,8 +212,11 @@
             border-radius: 9999px;
             cursor: pointer;
             transition: all 0.3s;
-            font-size: 0.875rem;
+            font-size: 0.75rem; /* Smaller font on mobile */
             color: #9ca3af;
+        }
+        @media (min-width: 768px) {
+            .choice-chip { font-size: 0.875rem; }
         }
         .choice-chip:hover {
             border-color: #666;
@@ -250,7 +267,7 @@
                     <div class="dot bg-yellow"></div>
                     <div class="dot bg-green"></div>
                 </div>
-                <div class="text-xs text-gray-400 font-mono" id="modal-url-display">https://loading...</div>
+                <div class="hidden md:block text-xs text-gray-400 font-mono" id="modal-url-display">https://loading...</div>
                 <a id="modal-external-link" href="#" target="_blank" class="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1">
                     Open in New Tab <i data-lucide="external-link" class="w-3 h-3"></i>
                 </a>
@@ -260,38 +277,40 @@
                 <div class="absolute inset-0 flex items-center justify-center text-gray-500 pointer-events-none">
                     <span class="animate-pulse">Loading Site...</span>
                 </div>
-                <iframe id="project-frame" src="" class="w-full h-full border-0 relative z-10" allowfullscreen></iframe>
+                <!-- -webkit-overflow-scrolling: touch enables smooth scroll on iOS iframes -->
+                <iframe id="project-frame" src="" class="w-full h-full border-0 relative z-10" style="-webkit-overflow-scrolling: touch;" allowfullscreen></iframe>
             </div>
         </div>
     </div>
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 glass transition-all duration-300 py-4">
-        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
-            <a href="#" class="text-xl font-bold tracking-tighter">PORTER<span class="text-blue-500">.DEV</span></a>
+    <nav class="fixed w-full z-50 glass transition-all duration-300 py-3 md:py-4">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center">
+            <a href="#" class="text-lg md:text-xl font-bold tracking-tighter">PORTER<span class="text-blue-500">.DEV</span></a>
             <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-400">
                 <a href="#builder-section" class="hover:text-white transition-colors">Process</a>
                 <a href="#portfolio" class="hover:text-white transition-colors">Work</a>
                 <a href="#automation" class="hover:text-white transition-colors">AI Automation</a>
                 <a href="#packages" class="hover:text-white transition-colors">Pricing</a>
             </div>
-            <a href="#contact" class="bg-white text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-gray-200 transition-transform hover:scale-105">
-                Get a Free Demo
+            <!-- Smaller button on mobile -->
+            <a href="#contact" class="bg-white text-black px-4 py-2 rounded-full text-xs md:text-sm font-bold hover:bg-gray-200 transition-transform hover:scale-105">
+                Get a Demo
             </a>
         </div>
     </nav>
 
     <!-- SECTION 1: HERO -->
     <section class="relative min-h-screen flex flex-col items-center justify-center px-4">
-        <div class="text-center z-10 max-w-5xl mx-auto">
-            <div class="hero-animate inline-block px-3 py-1 mb-6 text-xs font-bold tracking-widest text-blue-400 uppercase bg-blue-500/10 rounded-full border border-blue-500/20 animate-pulse">
+        <div class="text-center z-10 max-w-5xl mx-auto mt-10">
+            <div class="hero-animate inline-block px-3 py-1 mb-6 text-[10px] md:text-xs font-bold tracking-widest text-blue-400 uppercase bg-blue-500/10 rounded-full border border-blue-500/20 animate-pulse">
                 Based in Norman, OK
             </div>
-            <h1 class="hero-animate text-6xl md:text-8xl font-bold mb-8 leading-tight tracking-tight">
+            <h1 class="hero-animate text-5xl md:text-8xl font-bold mb-6 md:mb-8 leading-tight tracking-tight">
                 Websites that <br>
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">work.</span>
             </h1>
-            <p class="hero-animate text-gray-300 text-xl md:text-2xl max-w-2xl mx-auto mb-10 font-light">
+            <p class="hero-animate text-gray-300 text-lg md:text-2xl max-w-2xl mx-auto mb-8 md:mb-10 font-light px-4">
                 Professional web development and AI automation for local businesses. 
             </p>
             
@@ -312,13 +331,15 @@
     </section>
 
     <!-- SECTION 2: THE BUILDER ANIMATION -->
-    <section id="builder-section" class="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-black/40 backdrop-blur-sm z-10">
-        <div class="absolute top-20 z-10 text-center w-full px-4 mb-10">
-            <h2 class="text-3xl md:text-4xl font-bold mb-2">Watch Your Site Come to Life</h2>
-            <p class="text-gray-400">Scroll down to build the interface</p>
+    <!-- Changed h-screen to h-[100dvh] for better mobile browser support -->
+    <section id="builder-section" class="relative h-[100dvh] w-full flex flex-col items-center justify-center overflow-hidden bg-black/40 backdrop-blur-sm z-10">
+        <div class="absolute top-24 md:top-20 z-10 text-center w-full px-4 mb-10">
+            <h2 class="text-2xl md:text-4xl font-bold mb-2">Watch Your Site Come to Life</h2>
+            <p class="text-gray-400 text-sm md:text-base">Scroll down to build the interface</p>
         </div>
 
         <div id="builder-stage" class="w-full max-w-5xl px-4 relative flex items-center justify-center">
+            <!-- Cursor (Hidden on mobile via CSS) -->
             <div id="cursor" class="absolute z-50 w-8 h-8 pointer-events-none opacity-0 drop-shadow-[0_0_10px_rgba(0,0,0,0.5)]">
                 <svg viewBox="0 0 24 24" fill="white" stroke="black" stroke-width="1" class="w-full h-full"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path></svg>
             </div>
@@ -326,26 +347,26 @@
             <div class="browser-window w-full max-w-4xl aspect-video bg-white relative shadow-2xl">
                 <div class="browser-header">
                     <div class="dot bg-red"></div><div class="dot bg-yellow"></div><div class="dot bg-green"></div>
-                    <div class="ml-4 h-4 bg-gray-700 rounded-full w-1/2 opacity-50 text-[10px] flex items-center px-2 text-gray-400 font-mono">https://your-business.com</div>
+                    <div class="ml-4 h-3 md:h-4 bg-gray-700 rounded-full w-1/2 opacity-50 text-[8px] md:text-[10px] flex items-center px-2 text-gray-400 font-mono">https://your-business.com</div>
                 </div>
                 <div class="relative h-full bg-white overflow-hidden flex flex-col">
-                    <div class="mock-nav w-full flex items-center justify-between px-6 py-3 bg-white shadow-sm relative z-20">
-                        <div class="w-24 h-4 bg-gray-800 rounded"></div> 
-                        <div class="flex gap-4"><div class="w-12 h-2 bg-gray-300 rounded"></div><div class="w-12 h-2 bg-gray-300 rounded"></div><div class="w-20 h-8 bg-blue-600 rounded-full"></div></div>
+                    <div class="mock-nav w-full flex items-center justify-between px-4 md:px-6 py-2 md:py-3 bg-white shadow-sm relative z-20">
+                        <div class="w-16 md:w-24 h-3 md:h-4 bg-gray-800 rounded"></div> 
+                        <div class="flex gap-2 md:gap-4"><div class="w-8 md:w-12 h-2 bg-gray-300 rounded"></div><div class="w-8 md:w-12 h-2 bg-gray-300 rounded"></div><div class="w-12 md:w-20 h-6 md:h-8 bg-blue-600 rounded-full"></div></div>
                     </div>
                     <div class="mock-hero w-full flex-shrink-0 relative overflow-hidden">
                         <div class="absolute inset-0 bg-gray-50"></div>
-                        <div class="relative z-10 text-center w-full px-10">
-                            <div class="w-3/4 h-8 bg-gray-800 rounded mx-auto mb-4 mock-hero-text"></div><div class="w-1/2 h-4 bg-gray-400 rounded mx-auto mock-hero-sub"></div>
-                            <div class="flex justify-center gap-4 mt-8"><div class="w-32 h-10 bg-blue-600 rounded mock-btn shadow-lg"></div></div>
+                        <div class="relative z-10 text-center w-full px-4 md:px-10">
+                            <div class="w-3/4 h-6 md:h-8 bg-gray-800 rounded mx-auto mb-2 md:mb-4 mock-hero-text"></div><div class="w-1/2 h-3 md:h-4 bg-gray-400 rounded mx-auto mock-hero-sub"></div>
+                            <div class="flex justify-center gap-4 mt-4 md:mt-8"><div class="w-24 md:w-32 h-8 md:h-10 bg-blue-600 rounded mock-btn shadow-lg"></div></div>
                         </div>
                     </div>
                     <div class="mock-grid w-full flex-grow bg-white">
-                        <div class="mock-card p-4 flex flex-col gap-2 shadow-sm border border-gray-100"><div class="w-8 h-8 bg-blue-100 rounded-full mb-2"></div><div class="w-20 h-3 bg-gray-800 rounded"></div><div class="w-full h-2 bg-gray-200 rounded"></div></div>
-                        <div class="mock-card p-4 flex flex-col gap-2 shadow-sm border border-gray-100"><div class="w-8 h-8 bg-purple-100 rounded-full mb-2"></div><div class="w-20 h-3 bg-gray-800 rounded"></div><div class="w-full h-2 bg-gray-200 rounded"></div></div>
-                        <div class="mock-card p-4 flex flex-col gap-2 shadow-sm border border-gray-100"><div class="w-8 h-8 bg-green-100 rounded-full mb-2"></div><div class="w-20 h-3 bg-gray-800 rounded"></div><div class="w-full h-2 bg-gray-200 rounded"></div></div>
+                        <div class="mock-card p-2 md:p-4 flex flex-col gap-2 shadow-sm border border-gray-100"><div class="w-6 h-6 md:w-8 md:h-8 bg-blue-100 rounded-full mb-2"></div><div class="w-16 md:w-20 h-2 md:h-3 bg-gray-800 rounded"></div><div class="w-full h-2 bg-gray-200 rounded"></div></div>
+                        <div class="mock-card p-2 md:p-4 flex flex-col gap-2 shadow-sm border border-gray-100"><div class="w-6 h-6 md:w-8 md:h-8 bg-purple-100 rounded-full mb-2"></div><div class="w-16 md:w-20 h-2 md:h-3 bg-gray-800 rounded"></div><div class="w-full h-2 bg-gray-200 rounded"></div></div>
+                        <div class="mock-card p-2 md:p-4 flex flex-col gap-2 shadow-sm border border-gray-100"><div class="w-6 h-6 md:w-8 md:h-8 bg-green-100 rounded-full mb-2"></div><div class="w-16 md:w-20 h-2 md:h-3 bg-gray-800 rounded"></div><div class="w-full h-2 bg-gray-200 rounded"></div></div>
                     </div>
-                    <div class="mock-automation absolute top-16 right-4 bg-zinc-900 text-white p-4 rounded-lg shadow-2xl opacity-0 scale-75 flex flex-col gap-2 text-xs z-30 border border-zinc-700 w-48">
+                    <div class="mock-automation absolute top-12 md:top-16 right-2 md:right-4 bg-zinc-900 text-white p-3 md:p-4 rounded-lg shadow-2xl opacity-0 scale-75 flex flex-col gap-2 text-[10px] md:text-xs z-30 border border-zinc-700 w-32 md:w-48">
                         <div class="flex items-center gap-2 border-b border-gray-700 pb-2 mb-1"><div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div><span class="font-bold">AI Agent Active</span></div>
                         <div class="flex items-center gap-2 opacity-70"><div class="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center text-[8px]">1</div><span>Lead Captured</span></div>
                          <div class="flex items-center gap-2 opacity-70"><div class="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center text-[8px]">2</div><span>Email Sent</span></div>
@@ -360,8 +381,8 @@
         <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div>
                 <!-- Added class for text scramble target -->
-                <h2 class="text-4xl font-bold mb-6 display-font" id="value-headline">Engineering Real<br>Business Value.</h2>
-                <div class="space-y-6 text-gray-400 value-text">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 display-font" id="value-headline">Engineering Real<br>Business Value.</h2>
+                <div class="space-y-6 text-gray-400 value-text text-sm md:text-base">
                     <p>I combine advanced technical skills with a deep understanding of local business needs. My goal isn't just to write code—it's to build digital assets that drive engagement and efficiency.</p>
                     <p><strong>Experience the quality before you commit.</strong> I develop fully functional concept demos for your business at no cost, ensuring our vision aligns perfectly with your goals before any investment is made.</p>
                     <ul class="space-y-3 mt-4">
@@ -384,17 +405,17 @@
                         <!-- Step 1 -->
                         <div class="flex gap-4 relative z-10 group process-step" id="step-1">
                             <div class="process-dot w-10 h-10 rounded-full bg-gray-900 border border-gray-700 flex items-center justify-center font-bold text-gray-500 transition-colors">1</div>
-                            <div><h4 class="font-bold text-white">Plan & Design</h4><p class="text-sm text-gray-500">We discuss your goals. I build a free demo.</p></div>
+                            <div><h4 class="font-bold text-white">Plan & Design</h4><p class="text-xs md:text-sm text-gray-500">We discuss your goals. I build a free demo.</p></div>
                         </div>
                         <!-- Step 2 -->
                         <div class="flex gap-4 relative z-10 group process-step" id="step-2">
                             <div class="process-dot w-10 h-10 rounded-full bg-gray-900 border border-gray-700 flex items-center justify-center font-bold text-gray-500 transition-colors">2</div>
-                            <div><h4 class="font-bold text-white">Build & Launch</h4><p class="text-sm text-gray-500">Custom development, deployed fast.</p></div>
+                            <div><h4 class="font-bold text-white">Build & Launch</h4><p class="text-xs md:text-sm text-gray-500">Custom development, deployed fast.</p></div>
                         </div>
                         <!-- Step 3 -->
                         <div class="flex gap-4 relative z-10 group process-step" id="step-3">
                             <div class="process-dot w-10 h-10 rounded-full bg-gray-900 border border-gray-700 flex items-center justify-center font-bold text-gray-500 transition-colors">3</div>
-                            <div><h4 class="font-bold text-white">Automate & Grow</h4><p class="text-sm text-gray-500">Add AI workflows to save you time.</p></div>
+                            <div><h4 class="font-bold text-white">Automate & Grow</h4><p class="text-xs md:text-sm text-gray-500">Add AI workflows to save you time.</p></div>
                         </div>
                     </div>
                 </div>
@@ -406,8 +427,8 @@
     <section id="automation" class="py-24 bg-[#080808]/90 backdrop-blur-md relative overflow-hidden z-20">
         <div class="w-full relative z-10">
             <div class="text-center mb-16 px-6">
-                <h2 class="text-4xl font-bold mb-4">Your Business on Autopilot</h2>
-                <p class="text-gray-400 max-w-2xl mx-auto">I don't just build pretty sites. I build systems that handle your admin work automatically.</p>
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Your Business on Autopilot</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto text-sm md:text-base">I don't just build pretty sites. I build systems that handle your admin work automatically.</p>
             </div>
             <div class="marquee-container">
                 <div class="marquee-track">
@@ -433,16 +454,19 @@
     <!-- PORTFOLIO SECTION -->
     <section id="portfolio" class="py-24 px-6 bg-black/80 z-20 relative">
         <div class="max-w-7xl mx-auto">
-            <h2 class="text-4xl font-bold mb-12">Recent Work & Demos</h2>
+            <h2 class="text-3xl md:text-4xl font-bold mb-12">Recent Work & Demos</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Project 1 -->
                 <div class="group cursor-pointer relative aspect-video bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-lg hover:shadow-green-900/20 transition-shadow" onclick="openProject('https://www.crimson-landscaping.com/', 'Crimson Landscaping')">
                     
-                    <!-- LIVE PREVIEW IFRAME (Scaled) -->
-                    <div class="absolute inset-0 w-[200%] h-[200%] origin-top-left transform scale-50 pointer-events-none bg-white">
+                    <!-- LIVE PREVIEW IFRAME (Scaled) - Hidden on small screens for performance -->
+                    <div class="hidden md:block absolute inset-0 w-[200%] h-[200%] origin-top-left transform scale-50 pointer-events-none bg-white">
                         <iframe src="https://www.crimson-landscaping.com/" class="w-full h-full border-0" scrolling="no"></iframe>
                     </div>
+
+                    <!-- Gradient Fallback for Mobile -->
+                    <div class="md:hidden absolute inset-0 bg-gradient-to-br from-gray-800 to-green-900"></div>
 
                     <!-- Dark Overlay -->
                     <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 group-hover:opacity-40 transition-opacity z-10"></div>
@@ -450,7 +474,7 @@
                     <!-- Content -->
                     <div class="absolute bottom-0 left-0 p-6 translate-y-4 group-hover:translate-y-0 transition-transform z-20">
                         <h3 class="text-2xl font-bold text-white">Crimson Landscaping</h3>
-                        <p class="text-gray-300 text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity">Design, Installation, Maintenance Booking</p>
+                        <p class="text-gray-300 text-sm mt-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">Design, Installation, Maintenance Booking</p>
                     </div>
 
                     <!-- Preview Badge -->
@@ -463,15 +487,18 @@
                 <div class="group cursor-pointer relative aspect-video bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-lg hover:shadow-blue-900/20 transition-shadow" onclick="openProject('https://cr-horses.com/', 'Modern Horse Sales')">
                     
                      <!-- LIVE PREVIEW IFRAME -->
-                    <div class="absolute inset-0 w-[200%] h-[200%] origin-top-left transform scale-50 pointer-events-none bg-white">
+                    <div class="hidden md:block absolute inset-0 w-[200%] h-[200%] origin-top-left transform scale-50 pointer-events-none bg-white">
                         <iframe src="https://cr-horses.com/" class="w-full h-full border-0" scrolling="no"></iframe>
                     </div>
+
+                     <!-- Gradient Fallback for Mobile -->
+                     <div class="md:hidden absolute inset-0 bg-gradient-to-br from-gray-800 to-blue-900"></div>
 
                     <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 group-hover:opacity-40 transition-opacity z-10"></div>
 
                     <div class="absolute bottom-0 left-0 p-6 translate-y-4 group-hover:translate-y-0 transition-transform z-20">
                         <h3 class="text-2xl font-bold text-white">Modern Horse Sales</h3>
-                        <p class="text-gray-300 text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity">Equestrian Sales Platform with Filters</p>
+                        <p class="text-gray-300 text-sm mt-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">Equestrian Sales Platform with Filters</p>
                     </div>
                     <div class="absolute top-4 right-4 bg-blue-600 text-xs font-bold px-2 py-1 rounded uppercase flex items-center gap-1 z-20">
                         <i data-lucide="maximize-2" class="w-3 h-3"></i> Preview
@@ -482,15 +509,18 @@
                 <div class="group cursor-pointer relative aspect-video bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-lg hover:shadow-green-900/20 transition-shadow" onclick="openProject('https://porspective.github.io/MDN-website/', 'MDN Lawn & Landscape')">
                     
                     <!-- LIVE PREVIEW IFRAME -->
-                    <div class="absolute inset-0 w-[200%] h-[200%] origin-top-left transform scale-50 pointer-events-none bg-white">
+                    <div class="hidden md:block absolute inset-0 w-[200%] h-[200%] origin-top-left transform scale-50 pointer-events-none bg-white">
                         <iframe src="https://porspective.github.io/MDN-website/" class="w-full h-full border-0" scrolling="no"></iframe>
                     </div>
+
+                     <!-- Gradient Fallback for Mobile -->
+                     <div class="md:hidden absolute inset-0 bg-gradient-to-br from-gray-800 to-green-900"></div>
 
                     <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 group-hover:opacity-40 transition-opacity z-10"></div>
 
                     <div class="absolute bottom-0 left-0 p-6 translate-y-4 group-hover:translate-y-0 transition-transform z-20">
                         <h3 class="text-2xl font-bold text-white">MDN Lawn & Landscape</h3>
-                        <p class="text-gray-300 text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity">Lawn Maintenance Services & Quotes</p>
+                        <p class="text-gray-300 text-sm mt-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">Lawn Maintenance Services & Quotes</p>
                     </div>
                     <div class="absolute top-4 right-4 bg-green-600 text-xs font-bold px-2 py-1 rounded uppercase flex items-center gap-1 z-20">
                         <i data-lucide="maximize-2" class="w-3 h-3"></i> Preview
@@ -513,8 +543,8 @@
     <section id="contact" class="py-24 px-6 z-20 relative">
         <div class="max-w-5xl mx-auto glass-card p-8 md:p-12 rounded-3xl">
             <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold mb-4">Let's Build Something</h2>
-                <p class="text-gray-400">Based in Norman? I'd love to meet for coffee or hop on a call.</p>
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Let's Build Something</h2>
+                <p class="text-gray-400 text-sm md:text-base">Based in Norman? I'd love to meet for coffee or hop on a call.</p>
             </div>
 
             <form class="space-y-8" action="https://formspree.io/f/mvglwblo" method="POST">
@@ -588,6 +618,10 @@
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.getElementById('canvas-container').appendChild(renderer.domElement);
+        
+        // Prevent touch from hijacking scroll but allow interaction
+        renderer.domElement.style.touchAction = 'none'; 
+        
         const group = new THREE.Group();
         scene.add(group);
         const geometry = new THREE.IcosahedronGeometry(0.5, 0);
@@ -614,10 +648,21 @@
         let targetY = 0;
         const windowHalfX = window.innerWidth / 2;
         const windowHalfY = window.innerHeight / 2;
+        
+        // Desktop Listener
         document.addEventListener('mousemove', (event) => {
             mouseX = (event.clientX - windowHalfX);
             mouseY = (event.clientY - windowHalfY);
         });
+        
+        // Mobile Touch Listener
+        document.addEventListener('touchmove', (event) => {
+             if (event.touches.length > 0) {
+                mouseX = (event.touches[0].clientX - windowHalfX);
+                mouseY = (event.touches[0].clientY - windowHalfY);
+             }
+        });
+
         function animateThree() {
             requestAnimationFrame(animateThree);
             targetX = mouseX * 0.001;
