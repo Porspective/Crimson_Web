@@ -41,18 +41,21 @@ const PROJECTS = [
     summary: "A faster path from first visit to quote request.",
     services: "Strategy, web design, conversion",
     image: landscapingImage,
+    url: "https://porspective.github.io/Cafe_Alley/",
   },
   {
     title: "Modern Horse Sales",
     summary: "A premium catalog designed around confident browsing.",
     services: "Art direction, interface, filtering",
     image: horseImage,
+    url: "https://basecamping.net/",
   },
   {
     title: "MDN Lawns and Landscaping",
     summary: "A clear service funnel built for local search traffic.",
     services: "Web design, SEO structure, leads",
     image: mdnImage,
+    url: "https://porspective.github.io/TheMont/",
   },
 ];
 
@@ -92,26 +95,37 @@ function ProjectCard({ project }) {
 
   return (
     <article className="project-card" data-project-card>
-      <div className={`project-media image-${imageState}`}>
-        {imageState === "error" ? (
-          <div className="project-image-error">Preview unavailable</div>
-        ) : (
-          <img
-            src={project.image}
-            alt={`${project.title} project cover`}
-            loading="lazy"
-            onLoad={() => setImageState("loaded")}
-            onError={() => setImageState("error")}
-          />
-        )}
-      </div>
-      <div className="project-copy">
-        <div>
-          <h3>{project.title}</h3>
-          <p>{project.summary}</p>
+      <a
+        className="project-card-link"
+        href={project.url}
+        target="_blank"
+        rel="noreferrer"
+        aria-label={`Open ${project.title} project in a new tab`}
+      >
+        <div className={`project-media image-${imageState}`}>
+          {imageState === "error" ? (
+            <div className="project-image-error">Preview unavailable</div>
+          ) : (
+            <img
+              src={project.image}
+              alt={`${project.title} project cover`}
+              loading="lazy"
+              onLoad={() => setImageState("loaded")}
+              onError={() => setImageState("error")}
+            />
+          )}
         </div>
-        <p className="project-services">{project.services}</p>
-      </div>
+        <div className="project-copy">
+          <div>
+            <div className="project-title-row">
+              <h3>{project.title}</h3>
+              <ArrowUpRight size={25} aria-hidden="true" />
+            </div>
+            <p>{project.summary}</p>
+          </div>
+          <p className="project-services">{project.services}</p>
+        </div>
+      </a>
     </article>
   );
 }
