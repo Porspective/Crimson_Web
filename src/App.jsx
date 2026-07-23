@@ -8,9 +8,9 @@ import {
 } from "@phosphor-icons/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import landscapingImage from "./assets/project-landscaping.webp";
-import horseImage from "./assets/project-horses.webp";
-import mdnImage from "./assets/project-mdn.webp";
+import cafeAlleyImage from "./assets/project-cafe-alley.webp";
+import baseCampingImage from "./assets/project-basecamping.webp";
+import theMontImage from "./assets/project-the-mont.webp";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -37,24 +37,24 @@ const PROCESS_BEATS = [
 
 const PROJECTS = [
   {
-    title: "Crimson Landscaping",
-    summary: "A faster path from first visit to quote request.",
-    services: "Strategy, web design, conversion",
-    image: landscapingImage,
+    title: "Café Alley",
+    summary: "A restaurant experience built around local character and online ordering.",
+    services: "Web design, brand expression, ordering",
+    image: cafeAlleyImage,
     url: "https://porspective.github.io/Cafe_Alley/",
   },
   {
-    title: "Modern Horse Sales",
-    summary: "A premium catalog designed around confident browsing.",
-    services: "Art direction, interface, filtering",
-    image: horseImage,
+    title: "Base Camping",
+    summary: "An editorial platform for life beyond the empty nest.",
+    services: "Editorial design, content system, interaction",
+    image: baseCampingImage,
     url: "https://basecamping.net/",
   },
   {
-    title: "MDN Lawns and Landscaping",
-    summary: "A clear service funnel built for local search traffic.",
-    services: "Web design, SEO structure, leads",
-    image: mdnImage,
+    title: "The Mont",
+    summary: "A streamlined mobile-first ordering experience.",
+    services: "Interface design, ordering flow, mobile",
+    image: theMontImage,
     url: "https://porspective.github.io/TheMont/",
   },
 ];
